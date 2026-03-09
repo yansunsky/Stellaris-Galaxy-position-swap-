@@ -399,8 +399,8 @@ def main(file_path, id1, id2):
     # 写入文件
     write_file(file_path, new_content)
 
-    print("星系位置交换完成！")
-
+    print("星系位置交换完成！ / Galaxy position swap completed!")
+    return True
 
 def log_operation(id1, id2):
     """
@@ -474,6 +474,9 @@ def get_file_path():
         return None
 
 if __name__ == "__main__":
+    print("=" * 60)
+    print("星系位置交换工具 / Galaxy Position Swap Tool")
+    print("=" * 60)
     # 示例调用
     #file_path = "D:\\admin\\Documents\\Paradox Interactive\\Stellaris\\save games\\m3_-934934054\\gamestate"
     # 获取文件路径
@@ -481,12 +484,36 @@ if __name__ == "__main__":
     print("文件路径gamestate_path:", file_path)
     if os.path.exists(file_path):
         # 从用户获取输入
-        try:
-            id1 = int(input("请输入第一个星系ID/ Please input the first galaxy ID: "))
-            id2 = int(input("请输入第二个星系ID/ Please input the second galaxy ID: "))
-            log_operation(id1, id2)
-            main(file_path, id1, id2)
-        except ValueError:
-            print("输入错误，请输入有效的整数ID/Input error, please enter a valid integer ID")
+        while True:
+        # 从用户获取输入
+            try:
+                id1 = int(input("请输入第一个星系ID/ Please input the first galaxy ID: "))
+                id2 = int(input("请输入第二个星系ID/ Please input the second galaxy ID: "))
+                log_operation(id1, id2)
+                success = main(file_path, id1, id2)
+                if success:
+                    print("\n" + "=" * 60)
+                    choice = input("是否要继续交换其他星系？(y/n) / Continue to swap other galaxies? (y/n): ")
+                    if choice.lower() != 'y':
+                        print("\n感谢使用，再见！ / Thanks for using, goodbye!")
+                        break
+                    print("\n" + "=" * 60)
+                else:
+                    print("\n操作失败，是否重试？(y/n) / Operation failed, retry? (y/n): ")
+                    retry = input()
+                    if retry.lower() != 'y':
+                        break
+            except ValueError:
+                print("输入错误，请输入有效的整数ID/Input error, please enter a valid integer ID")
+                continue
+            except KeyboardInterrupt:
+                print("\n\n程序被用户中断 / Program interrupted by user")
+                break
+            except Exception as e:
+                print(f"\n发生未知错误：{e} / Unknown error occurred: {e}")
+                print("是否继续？(y/n) / Continue? (y/n): ")
+                cont = input()
+                if cont.lower() != 'y':
+                    break
     else:
         print(f"错误：文件 {file_path} 不存在")
